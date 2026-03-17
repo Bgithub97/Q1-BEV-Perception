@@ -1,0 +1,36 @@
+#!/bin/bash
+echo "🚀 Building Q1 Research Environment..."
+
+# 1. Install Libraries
+pip install opencv-python-headless==4.8.0.74
+pip install torch torchvision ultralytics albumentations wandb pyquaternion nuscenes-devkit kaggle
+
+# 2. Setup Kaggle API (Replace with your actual keys in the script)
+export KAGGLE_USERNAME="your_username"
+export KAGGLE_KEY="your_key"
+mkdir -p ~/.kaggle
+echo '{"username":"'$KAGGLE_USERNAME'","key":"'$KAGGLE_KEY'"}' > ~/.kaggle/kaggle.json
+chmod 600 ~/.kaggle/kaggle.json
+
+# 3. Create Folders
+mkdir -p /workspace/Q1_BEV_Perception/data/kitti
+mkdir -p /workspace/Q1_BEV_Perception/data/nuscenes
+mkdir -p /workspace/Q1_BEV_Perception/experiments
+
+# 4. Download KITTI (Takes ~30 seconds on DGX)
+cd /workspace/Q1_BEV_Perception/data/kitti
+wget -q https://s3.eu-central-1.amazonaws.com/avg-kitti/data_road.zip
+unzip -q data_road.zip && mv data_road/* . && rm -r data_road data_road.zip
+
+# 5. Download nuScenes Mini (Takes ~1 minute)
+cd /workspace/Q1_BEV_Perception/data/nuscenes
+wget -q https://www.nuscenes.org/data/v1.0-mini.tgz
+tar -xf v1.0-mini.tgz && rm v1.0-mini.tgz
+wget -q https://www.nuscenes.org/data/nuScenes-map-expansion-v1.3.zip
+unzip -q nuScenes-map-expansion-v1.3.zip -d maps/ && rm nuScenes-map-expansion-v1.3.zip
+
+# 6. Generate Masks automatically!
+cd /workspace/Q1_BEV_Perception/src
+python generate_nusc_masks.py
+
+echo "✅ Environment Ready! Ready to run train.py."
