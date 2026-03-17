@@ -9,7 +9,7 @@ pip install torch torchvision ultralytics albumentations wandb pyquaternion nusc
 export KAGGLE_USERNAME="bharathchandrashekar"
 export KAGGLE_KEY="01e49170c640efa72046053b09e78936"
 mkdir -p ~/.kaggle
-echo '{"username":"'$KAGGLE_USERNAME'","key":"'$KAGGLE_KEY'"}' > ~/.kaggle/kaggle.json
+echo '{"username":"'$bharathchandrashekar'","key":"'$01e49170c640efa72046053b09e78936'"}' > ~/.kaggle/kaggle.json
 chmod 600 ~/.kaggle/kaggle.json
 
 # 3. Create Folders
